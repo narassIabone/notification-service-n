@@ -1,4 +1,4 @@
-package ru.cinimex.notificationservicen;
+package ru.cinimex.notificationservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

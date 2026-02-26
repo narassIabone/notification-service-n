@@ -1,0 +1,21 @@
+name: notification-service
+
+services:
+  notification-service:
+    build:
+      context: notification-service-impl
+      dockerfile: notification-service-impl/Dockerfile
+    container_name: notification-service-app
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=global-kafka:29092
+      - SPRING_MAIL_HOST=smtp.mail.ru
+      - SPRING_MAIL_PORT=465
+      - SPRING_MAIL_USERNAME=${NOTIFICATION_MAIL_USER}
+      - SPRING_MAIL_PASSWORD=${NOTIFICATION_MAIL_PASSWORD}
+      - APP_KAFKA_TOPIC=notification.message.in
+    networks:
+      - backend-net
+
+networks:
+  backend-net:
+    external: true
