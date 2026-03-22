@@ -6,32 +6,35 @@ spring:
     name: notification-service-n
 
   mail:
-    host: smtp.mail.ru
-    port: 465
+    host: ${SPRING_MAIL_HOST}
+    port: ${SPRING_MAIL_PORT}
     username: ${SPRING_MAIL_USERNAME}
     password: ${SPRING_MAIL_PASSWORD}
     properties:
       mail.smtp.auth: true
-      mail.smtp.ssl.enable: true
-      mail.smtp.ssl.required: true
-      mail.smtp.socketFactory.port: 465
-      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.ssl.enable: false
+      mail.smtp.ssl.trust: "*"
 
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    properties:
+      security.protocol: ${SPRING_KAFKA_PROPERTIES_SECURITY_PROTOCOL:PLAINTEXT}
+      ssl:
+        truststore-location: ${SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_LOCATION}
+        truststore-password: ${SPRING_KAFKA_PROPERTIES_SSL_TRUSTSTORE_PASSWORD}
+        keystore-location: ${SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_LOCATION}
+        keystore-password: ${SPRING_KAFKA_PROPERTIES_SSL_KEYSTORE_PASSWORD}
+        key-password: ${SPRING_KAFKA_PROPERTIES_SSL_KEY_PASSWORD}
+        endpoint.identification.algorithm: ""
     consumer:
       group-id: notification-group-v2
       auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
-        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
-        spring.json.value.default.type: ru.cinimex.notificationservice.dto.KafkaNotificationMessage
 
 app:
   kafka:
-    topic: notification.message.in
+    topic: ${KAFKA_TOPIC_NOTIFICATION:notification.message.in}
 
 logging:
   level:
